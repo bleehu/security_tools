@@ -40,6 +40,7 @@ public class CaesarShifter {
 		String token = scan.next();
 		String command = token.trim();
 		while (! command.equals("exit")) {
+			System.out.println("Enter command.");
 			//Format: brute force chars
 			if (command.equals("brute force chars")) {
 				bruteCharShift();
