@@ -5,3 +5,5 @@ Used as a quick script to hammer vulnerable flag servers. Modify for your own us
 recommended use: 
 `./repeater.py &`
 this will run it in the background
+
+You may need to `pip install requests` before using this script
