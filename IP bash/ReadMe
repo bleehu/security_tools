@@ -1,0 +1,12 @@
+FIRST GET BOTH YOUR PUBLIC IP AND IF YOU HAVE IT THE IP OF THE COUNTING SERVER
+
+edit the batch file to change the listed ips to the two stated above. DO NOT RUN UNTIL THIS IS DONE.
+If you do not have the second ip, comment out or delete the second set of ips in the file.
+
+after successfully run, place script into the crontab using:
+
+sudo crontab -e
+
+after its loaded onto the cron run the following command:
+
+sudo service cron reload

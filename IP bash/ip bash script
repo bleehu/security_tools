@@ -7,3 +7,4 @@ iptables -A OUTPUT -d 192.168.1.1 -j ACCEPT
 iptables -P INPUT DROP
 iptables -P OUTPUT DROP
 
+exit()
