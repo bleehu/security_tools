@@ -36,11 +36,17 @@ public class CaesarShifter {
 	public void commandsBlock() {
 		Scanner scan = new Scanner(System.in);
 		scan.useDelimiter(System.lineSeparator());
+		String key;
 		String token = scan.next();
 		String command = token.trim();
 		while (! command.equals("exit")) {
+			//Format: brute force chars
 			if (command.equals("brute force chars")) {
 				bruteCharShift();
+			//Format: xor 00100001
+			} else if (command.length() > 3 && command.substring(0, 3).equals("xor")) {
+				key = command.substring(4, command.length());
+				xorShift(key);
 			} else {
 				System.out.println("Unrecognized Command");
 			}
@@ -78,5 +84,71 @@ public class CaesarShifter {
 			shifty.append(System.lineSeparator());
 		}
 		printer.writeToFile(shifty.toString());
+		System.out.println("26 Simple Caesar Shifts written to printFile.txt");
+	}
+	
+	public void xorShift(String key) {
+		String numericText = textToNumber(cipherText);
+		int keylen = key.length();
+		int numtlen = numericText.length();
+		int index = 0;
+		int end;
+		String workString;
+		Integer[] kDigit = new Integer[keylen];
+		Integer cDigit;
+		for (int i = 0; i < keylen; i++) {
+			kDigit[i] = Integer.parseInt(key.substring(i, i+1));
+		}
+		StringBuilder xorey = new StringBuilder();
+		while (index < numtlen) {
+			end = Math.min(index + keylen, numtlen);
+			workString = numericText.substring(index, end);
+			for (int i = 0; i < keylen && index + i < end; i++) {
+				cDigit = Integer.parseInt(workString.substring(i, i+1));
+				xorey.append(cDigit ^ kDigit[i]);
+			}
+			index += keylen;
+		}
+		String xorText = numberToText(xorey.toString());
+		System.out.println("XOR operation with key " + key + " complete.");
+		System.out.println("Result is: " + xorText);
+	}
+	
+	private String textToNumber(String plainText) {
+		StringBuilder numericText = new StringBuilder();
+		Integer numChar;
+		for (int i = 0; i < plainText.length(); i++) {
+			numChar = new Integer((int) plainText.charAt(i));
+			if (numChar >= 0 && numChar < 10) {//One-digit numChar
+				numericText.append("000");
+				numericText.append(numChar.toString());
+			} else if (numChar >= 10 && numChar < 100) {//Two-digit numChar
+				numericText.append("00");
+				numericText.append(numChar.toString());
+			} else if (numChar >= 100 && numChar < 1000) {//Three-digit numChar
+				numericText.append("0");
+				numericText.append(numChar.toString());
+			} else if (numChar >= 1000) {//Four digit behavior
+				numericText.append(numChar.toString());
+			} else if (numChar >= 10000) {//Five+ digit behavior
+				//TODO Error Handling and rewrite code to handle 5-digit numChars
+			} else {//negative numChar is anomalous
+				//TODO Error Handling
+			}
+		}
+		return numericText.toString();
+	}
+	
+	private String numberToText(String numericText) {
+		int len = numericText.length();
+		StringBuilder plainText = new StringBuilder();
+		int index = 0;
+		String padUnit;
+		while (index < len) {
+			padUnit = numericText.substring(index, index + 4);
+			plainText.append((char) (Integer.parseInt(padUnit)));
+			index += 4;
+		}
+		return plainText.toString();
 	}
 }
